@@ -1422,6 +1422,7 @@ impl ScriptEnvironment {
                     &root,
                     interpreter,
                     prompt,
+                    cache,
                     false,
                     false,
                     false,

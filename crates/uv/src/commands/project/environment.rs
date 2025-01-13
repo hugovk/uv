@@ -89,6 +89,7 @@ impl CachedEnvironment {
             temp_dir.path(),
             interpreter,
             uv_virtualenv::Prompt::None,
+            cache,
             false,
             false,
             true,
