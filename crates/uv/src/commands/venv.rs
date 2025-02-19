@@ -263,7 +263,7 @@ async fn venv_impl(
     // Create the virtual environment.
     let venv = uv_virtualenv::create_venv(
         &path,
-        interpreter,
+        &interpreter,
         prompt,
         cache,
         system_site_packages,
