@@ -1499,6 +1499,7 @@ pub(crate) async fn resolve_names(
     let ResolverInstallerSettings {
         index_locations,
         index_strategy,
+        url_auth_policies,
         keyring_provider,
         resolution: _,
         prerelease: _,
@@ -1531,10 +1532,11 @@ pub(crate) async fn resolve_names(
     let client = RegistryClientBuilder::new(cache.clone())
         .native_tls(network_settings.native_tls)
         .connectivity(network_settings.connectivity)
+        .allow_insecure_host(network_settings.allow_insecure_host.clone())
+        .url_auth_policies(url_auth_policies.clone())
         .index_urls(index_locations.index_urls())
         .index_strategy(*index_strategy)
         .keyring(*keyring_provider)
-        .allow_insecure_host(network_settings.allow_insecure_host.clone())
         .markers(interpreter.markers())
         .platform(interpreter.platform())
         .build();
@@ -1637,6 +1639,7 @@ pub(crate) async fn resolve_environment(
     let ResolverSettingsRef {
         index_locations,
         index_strategy,
+        url_auth_policies,
         keyring_provider,
         resolution,
         prerelease,
@@ -1682,10 +1685,11 @@ pub(crate) async fn resolve_environment(
     let client = RegistryClientBuilder::new(cache.clone())
         .native_tls(network_settings.native_tls)
         .connectivity(network_settings.connectivity)
+        .allow_insecure_host(network_settings.allow_insecure_host.clone())
+        .url_auth_policies(url_auth_policies.clone())
         .index_urls(index_locations.index_urls())
         .index_strategy(index_strategy)
         .keyring(keyring_provider)
-        .allow_insecure_host(network_settings.allow_insecure_host.clone())
         .markers(interpreter.markers())
         .platform(interpreter.platform())
         .build();
@@ -1817,6 +1821,7 @@ pub(crate) async fn sync_environment(
     let InstallerSettingsRef {
         index_locations,
         index_strategy,
+        url_auth_policies,
         keyring_provider,
         dependency_metadata,
         config_setting,
@@ -1851,10 +1856,11 @@ pub(crate) async fn sync_environment(
     let client = RegistryClientBuilder::new(cache.clone())
         .native_tls(network_settings.native_tls)
         .connectivity(network_settings.connectivity)
+        .allow_insecure_host(network_settings.allow_insecure_host.clone())
+        .url_auth_policies(url_auth_policies.clone())
         .index_urls(index_locations.index_urls())
         .index_strategy(index_strategy)
         .keyring(keyring_provider)
-        .allow_insecure_host(network_settings.allow_insecure_host.clone())
         .markers(interpreter.markers())
         .platform(interpreter.platform())
         .build();
@@ -1976,6 +1982,7 @@ pub(crate) async fn update_environment(
     let ResolverInstallerSettings {
         index_locations,
         index_strategy,
+        url_auth_policies,
         keyring_provider,
         resolution,
         prerelease,
@@ -2053,10 +2060,11 @@ pub(crate) async fn update_environment(
     let client = RegistryClientBuilder::new(cache.clone())
         .native_tls(network_settings.native_tls)
         .connectivity(network_settings.connectivity)
+        .allow_insecure_host(network_settings.allow_insecure_host.clone())
+        .url_auth_policies(url_auth_policies.clone())
         .index_urls(index_locations.index_urls())
         .index_strategy(*index_strategy)
         .keyring(*keyring_provider)
-        .allow_insecure_host(network_settings.allow_insecure_host.clone())
         .markers(interpreter.markers())
         .platform(interpreter.platform())
         .build();
