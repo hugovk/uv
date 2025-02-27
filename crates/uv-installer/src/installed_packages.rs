@@ -113,12 +113,8 @@ impl InstalledPackages {
                 let idx = distributions.len();
 
                 // Ignore exact duplicate and log problematic duplications.
-                if Self::is_duplicate_distribution(
-                    &mut distributions,
-                    &mut by_name,
-                    path,
-                    &dist_info,
-                ) {
+                if Self::is_duplicate_distribution(&distributions, &mut by_name, &path, &dist_info)
+                {
                     continue;
                 }
 
@@ -153,7 +149,7 @@ impl InstalledPackages {
     fn is_duplicate_distribution(
         distributions: &[Option<InstalledDist>],
         by_name: &mut FxHashMap<PackageName, Vec<usize>>,
-        path: PathBuf,
+        path: &Path,
         dist_info: &InstalledDist,
     ) -> bool {
         // In most cases, there is no other distribution of the same name in path.
@@ -191,9 +187,7 @@ impl InstalledPackages {
         }) = &dist_info
         {
             if let InstalledDist::Url(InstalledDirectUrlDist { url, .. }) = existing {
-                if !is_same_file(url.path().to_string(), base_path.display().to_string())
-                    .unwrap_or(false)
-                {
+                if !is_same_file(url.path(), base_path).unwrap_or(false) {
                     debug!(
                         "Ignoring already processed egg-info at: `{}`",
                         path.user_display()
@@ -209,8 +203,8 @@ impl InstalledPackages {
         // of which version the module that Python will pick up is. We must keep both
         // to remove both.
         if !is_same_file(
-            existing.path().parent().unwrap_or(&Path::new("")),
-            dist_info.path().parent().unwrap_or(&Path::new("")),
+            existing.path().parent().unwrap_or(Path::new("")),
+            dist_info.path().parent().unwrap_or(Path::new("")),
         )
         .unwrap_or(false)
         {
