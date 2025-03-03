@@ -84,7 +84,7 @@ pub struct Index {
     pub publish_url: Option<Url>,
     /// The authentication policy for the index.
     ///
-    /// All requests made to URLs with this index url as a prefix will follow
+    /// All requests made to URLs with this index URL as a prefix will follow
     /// the policy corresponding to this authentication policy.
     ///
     /// ```toml

@@ -68,24 +68,24 @@ impl UrlAuthPolicies {
         Self(FxHashMap::default())
     }
 
-    /// Create a new `UrlAuthPolicies` from a list of URL and `AuthPolicy`
+    /// Create a new [`UrlAuthPolicies`] from a list of URL and [`AuthPolicy`]
     /// tuples.
-    pub fn from_tuples(tuples: &[(Url, AuthPolicy)]) -> Self {
-        let mut auth_policies = UrlAuthPolicies::new();
+    pub fn from_tuples(tuples: impl IntoIterator<Item = (Url, AuthPolicy)>) -> Self {
+        let mut auth_policies = Self::new();
         for (url, auth_policy) in tuples {
-            auth_policies.add_policy(url.clone(), *auth_policy);
+            auth_policies.add_policy(url, auth_policy);
         }
         auth_policies
     }
 
-    /// An an `AuthPolicy` for a URL.
+    /// An [`AuthPolicy`] for a URL.
     pub fn add_policy(&mut self, url: Url, auth_policy: AuthPolicy) {
         self.0.insert(url, auth_policy);
     }
 
-    /// Get the `AuthPolicy` for a URL.
+    /// Get the [`AuthPolicy`] for a URL.
     pub fn policy_for(&self, url: &Url) -> AuthPolicy {
-        // TODO: There are probably not many URLs to iterate through,
+        // TODO(john): There are probably not many URLs to iterate through,
         // but we could use a trie instead of a HashMap here for more
         // efficient search.
         for (auth_url, auth_policy) in &self.0 {

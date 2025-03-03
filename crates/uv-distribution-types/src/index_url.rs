@@ -393,10 +393,9 @@ impl<'a> IndexLocations {
 impl From<&IndexLocations> for UrlAuthPolicies {
     fn from(index_locations: &IndexLocations) -> UrlAuthPolicies {
         UrlAuthPolicies::from_tuples(
-            &(index_locations
+            index_locations
                 .indexes()
-                .map(|index| (index.url().url().clone(), index.auth_policy.into()))
-                .collect::<Vec<_>>()),
+                .map(|index| (index.url().url().clone(), index.auth_policy.into())),
         )
     }
 }
