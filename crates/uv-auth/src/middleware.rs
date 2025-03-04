@@ -51,7 +51,7 @@ impl NetrcMode {
 
 #[derive(Copy, Clone, Debug, Default, Hash, Eq, PartialEq)]
 pub enum AuthPolicy {
-    /// Attempt to authenticate if needed.
+    /// Try an unauthenticated request. If that fails, try an authenticated request.
     #[default]
     Auto,
     /// Always attempt to authenticate.
