@@ -84,8 +84,17 @@ pub struct Index {
     pub publish_url: Option<Url>,
     /// The authentication policy for the index.
     ///
-    /// All requests made to URLs with this index URL as a prefix will follow
-    /// the policy corresponding to this authentication policy.
+    /// There are three policies: "auto", "always", and "never".
+    ///
+    /// * "auto" will first attempt an unauthenticated request to the index.
+    ///   If that fails it will attempt an authenticated request.
+    /// * "always" will always attempt to make an authenticated request and will
+    ///   fail if the authenticated request fails.
+    /// * "never" will never attempt to make an authenticated request and will
+    ///   fail if an authenticated request fails.
+    ///
+    /// The authentication policy will apply to requests made to URLs with
+    /// this index URL as a prefix.
     ///
     /// ```toml
     /// [[tool.uv.index]]
@@ -201,20 +210,7 @@ impl Index {
     /// For indexes with a `/simple` endpoint, this is simply the URL with the final segment
     /// removed. This is useful, e.g., for credential propagation to other endpoints on the index.
     pub fn root_url(&self) -> Option<Url> {
-        let mut segments = self.raw_url().path_segments()?;
-        let last = match segments.next_back()? {
-            // If the last segment is empty due to a trailing `/`, skip it (as in `pop_if_empty`)
-            "" => segments.next_back()?,
-            segment => segment,
-        };
-
-        if !last.eq_ignore_ascii_case("simple") {
-            return None;
-        }
-
-        let mut url = self.raw_url().clone();
-        url.path_segments_mut().ok()?.pop_if_empty().pop();
-        Some(url)
+        self.url.root()
     }
 
     /// Retrieve the credentials for the index, either from the environment, or from the URL itself.

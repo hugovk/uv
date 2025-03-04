@@ -10272,10 +10272,46 @@ fn add_auth_policy_always_without_credentials() -> Result<()> {
     Ok(())
 }
 
-/// In auth-policy "never", even if the correct credentials are supplied,
-/// no authenticated requests will be allowed.
+/// In auth-policy "never", even if the correct credentials are supplied
+/// in the URL, no authenticated requests will be allowed.
 #[test]
-fn add_auth_policy_never_with_credentials() -> Result<()> {
+fn add_auth_policy_never_with_url_credentials() -> Result<()> {
+    let context = TestContext::new("3.12");
+
+    let pyproject_toml = context.temp_dir.child("pyproject.toml");
+    pyproject_toml.write_str(indoc! { r#"
+        [project]
+        name = "foo"
+        version = "1.0.0"
+        requires-python = ">=3.11, <4"
+        dependencies = []
+
+        [[tool.uv.index]]
+        name = "my-index"
+        url = "https://public:heron@pypi-proxy.fly.dev/basic-auth/simple"
+        auth-policy = "never"
+        default = true
+        "#
+    })?;
+
+    uv_snapshot!(context.add().arg("anyio"), @r"
+    success: false
+    exit_code: 2
+    ----- stdout -----
+
+    ----- stderr -----
+    error: Failed to fetch: `https://pypi-proxy.fly.dev/basic-auth/files/packages/14/fd/2f20c40b45e4fb4324834aea24bd4afdf1143390242c0b33774da0e2e34f/anyio-4.3.0-py3-none-any.whl.metadata`
+      Caused by: HTTP status client error (401 Unauthorized) for url (https://pypi-proxy.fly.dev/basic-auth/files/packages/14/fd/2f20c40b45e4fb4324834aea24bd4afdf1143390242c0b33774da0e2e34f/anyio-4.3.0-py3-none-any.whl.metadata)
+    "
+    );
+
+    Ok(())
+}
+
+/// In auth-policy "never", even if the correct credentials are supplied
+/// via env vars, no authenticated requests will be allowed.
+#[test]
+fn add_auth_policy_never_with_env_var_credentials() -> Result<()> {
     let context = TestContext::new("3.12");
 
     let pyproject_toml = context.temp_dir.child("pyproject.toml");
