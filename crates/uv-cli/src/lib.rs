@@ -914,8 +914,8 @@ pub enum CacheCommand {
     /// Show the cache size.
     ///
     /// Displays the total size of the cache directory. This includes all downloaded and built
-    /// wheels, source distributions, and other cached data. By default, outputs the size in raw
-    /// bytes; use `--human` for human-readable output.
+    /// wheels, source distributions, and other cached data. By default, outputs the size in a
+    /// human-readable format; use `--bytes` for the size in raw bytes.
     Size(SizeArgs),
 }
 
@@ -961,9 +961,20 @@ pub struct PruneArgs {
 
 #[derive(Args, Debug)]
 pub struct SizeArgs {
-    /// Display the cache size in human-readable format (e.g., `1.2 GiB` instead of raw bytes).
-    #[arg(long = "human", short = 'H', alias = "human-readable")]
+    /// Display the cache size in human-readable format (e.g., `1.2GiB` instead of raw bytes).
+    ///
+    /// This is the default.
+    #[arg(
+        long = "human",
+        short = 'H',
+        alias = "human-readable",
+        conflicts_with = "bytes"
+    )]
     pub human: bool,
+
+    /// Display the cache size in raw bytes.
+    #[arg(long, short = 'b')]
+    pub bytes: bool,
 }
 
 #[derive(Args)]
